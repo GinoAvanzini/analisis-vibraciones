@@ -1,3 +1,4 @@
+
 % 
 % Proyecto Integrador de Mecánica Vibratoria
 % Análisis de Vibraciones en vehículo con simetría axial de 4 GDL
@@ -31,20 +32,22 @@ l2 = 1;     % m
 % Matrices
 
 M = [m1, 0, 0, 0;
-     0, m2, 0, 0;
-     0, 0, m3, 0;
-     0, 0, 0, J];
+    0, m2, 0, 0;
+    0, 0, m3, 0;
+    0, 0, 0, J];
 
 C = [c1, 0, -c1, -c1*l1;
-     0, c2, -c2, c2*l2;
-     -c1, -c2, c1+c2, c1*l1 - c2*l2;
-     -c1*l1, c2*l2, c1*l1 - c2*l2, c1*l1^2 + c2*l2^2];
+    0, c2, -c2, c2*l2;
+    -c1, -c2, c1+c2, c1*l1 - c2*l2;
+    -c1*l1, c2*l2, c1*l1 - c2*l2, c1*l1^2 + c2*l2^2];
  
 K = [k1 + k2, 0, -k1, -k1*l1;
-     0, k3 + k4, -k3, k3*l2;
-     -k1, -k3, k1 + k3, k1*l1 - k3*l2;
-     -k1*l1, k3*l2, k1*l1 - k3*l2, k1*l1^2 + k3*l2^2];
-  
-     
-     
-     
+    0, k3 + k4, -k3, k3*l2;
+    -k1, -k3, k1 + k3, k1*l1 - k3*l2;
+    -k1*l1, k3*l2, k1*l1 - k3*l2, k1*l1^2 + k3*l2^2];
+
+
+[FI, Wn] = eig(K, M);
+
+
+%
