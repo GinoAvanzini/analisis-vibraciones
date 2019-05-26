@@ -12,7 +12,7 @@ close all
 %%
 % Datos del sistema
 
-m1 = 100;   % Kg
+m1 = 25;    % Kg
 m2 = m1;    % Kg
 m3 = 2000;  % Kg
 J = 500;    % Kg*m^2
@@ -22,27 +22,27 @@ k2 = 50;    % KN/m
 k3 = 10;    % KN/m
 k4 = k3;    % KN/m
 
-c1 = 10;
-c2 = 10;
+c1 = 4000;  % N*s/m
+c2 = 4000;  % N*s/m
 
 l1 = 2;     % m
 l2 = 1;     % m
 
 gdl = 4;
 
-dt = 0.05;
-t = 0:dt:1000;
+dt = 0.005;
+t = 0:dt:100;
 
 % Condiciones iniciales en coordenadas geométricas
-x0 = [0.2;
-    -0.1;
+x0 = [0.002;
+    -0.001;
     0;
-    1];
+    0];
 
-xd0 = [0.5;
+xd0 = [0;
     0;
-    0.2;
-    -2];
+    0;
+    0];
 
 %%
 % Matrices
@@ -62,17 +62,27 @@ K = [k1 + k2, 0, -k1, -k1*l1;
     -k1, -k3, k1 + k3, k1*l1 - k3*l2;
     -k1*l1, k3*l2, k1*l1 - k3*l2, k1*l1^2 + k3*l2^2];
 
-zeta_n = [0.1;
-    0.05;
-    0.05;
-    0.05];
+L = [k2, 0, 0, 0    % Matriz de participación de carga. Pn = L*P(t)
+    0, k4, 0, 0
+    0, 0, 0, 0 
+    0, 0, 0, 0];
+
+zeta_n = [0.05;
+    0.01;
+    0.01;
+    0.01];
 
 [FI, Wn] = eig(K, M);
+[X, wx] = eig(M\K);
+X = fliplr(X);
+
+Mn = diag(X'*M*X);
+Kn = diag(X'*K*X);
+
 
 %%
 % Respuesta en vibraciones libres analíticamente
 
-Mn = diag(M);
 
 % Los wn son en realidad w^2
 Wn_vec = diag(Wn);
@@ -95,18 +105,44 @@ end
 % Transformación a coordenadas geométricas
 x = FI*y;
 
-for i = 1:gdl
+% for i = 1:gdl
+%     
+%     figure(i)
+%     plot(t, x(i, :))
+%     
+% end
+
+%% 
+% Respuesta a carga periódica armónica
+
+A = 0.04;  
+lambda = 0.2;
+
+v = 40*1000/3600;       % 40 km/h en m/s
+wl = 2*pi*v/lambda;     % frec de la carga, función de la vel del auto
+
+beta_n = wl./(Wn_vec.^0.5);
+yf = zeros(4, length(t));
+
+
+P0f = diag(FI'*(A*L));        % Carga generalizada
+
+D = ((1-beta_n.^2).^2 + (2.*zeta_n.*beta_n).^2).^-0.5;
+theta = atan(2.*zeta_n.*beta_n./(1-beta_n.^2));
+
+
+for i=1:gdl
     
-    figure(i)
-    plot(t, x(i, :))
+   yf(i, :) = (P0f(i)*D(i)/Kn(i)*sin(wl*t-theta(i)));
     
 end
 
-%% 
-% 
-
-
-
+for i = 1:gdl
+    
+%     figure(i)
+%     plot(t, yf(i, :))
+    
+end
 
 
 %
