@@ -1,1 +1,4 @@
-# .gitignore
+# .gitignore from https://github.com/github/gitignore
+
+# OSX / *nix default autosave extension
+*.m~
