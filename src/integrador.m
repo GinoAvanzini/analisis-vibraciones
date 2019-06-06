@@ -1,18 +1,19 @@
 
 % 
 %% Proyecto Integrador de Mecánica Vibratoria
+
 %% Análisis de Vibraciones en vehículo con simetría axial de 4 GDL
 %
 
 
 clc
-clear all
+clear variables
 close all
 
 %% Datos del sistema
 % 
 
-m1 = 25;    % Kg
+m1 = 50;    % Kg
 m2 = m1;    % Kg
 m3 = 1000;  % Kg
 J = 500;    % Kg*m^2
@@ -111,9 +112,7 @@ xg = [A*sin(wl*(t));
 % 
 % end
 
-x0 = [0.010; 0.010; 0.01; 0.1];
-
-P0 = L*xg;
+x0 = [0; 0; 0; 0];
 
 ZERO = zeros(gdl, gdl);
 I = eye(gdl, gdl);
@@ -129,8 +128,13 @@ x2_ode = x2_ode';
 for i=1:gdl
     figure(i)
     plot(t, x2_ode(i, :))
+    hold on
 
 end
+
+clear x2_ode
+clear xg
+clear P0
 
 % setGlobalcounter(1);
 % [t, x_ode] = ode45(@(t, x_ode) ...
@@ -146,21 +150,136 @@ end
 
 %% Método de diferencia central para respuesta ante carga general
 
+clc
 
+amp = 0.01;
+b = 0.2;
 
+% Velocidades
+% v=[5 20 60 100];
+v = 5;
+v = v/3.6;
+p = b./(dt*v);
 
-%% Función para el ode45 en coordenadas modales
+da = (l1 + l2)./(dt*v);
+
+for j=1:length(v)
+    
+    %% Carga
+    P0 = zeros(gdl, len_t);
+    
+    P0(1, 2:round(p(j) + 1)) = triang(round(p(j)))*amp;
+    P0(2, (round(1 + da(j)):round((da(j) + p(j))))) = triang(round(p(j)))*amp;
+
+    figure(j)
+    plot(t, P0(1, :))
+    hold on 
+    plot(t, P0(2, :))
+    
+    P0 = L*P0;  % En [N], lo anterior era solo amplitud
+    
+    %% Respuesta con diferencia central
+
+    x0 = [0; 0; 0; 0];
+    xd0 = [0; 0; 0; 0];
+    
+    x_difcentral = zeros(4, len_t);
+    x_difcentral(:, 1) = x0;
+
+    xd_difcentral = xd0;
+
+    for i=2:len_t
+        x_difcentral(:, i) = 0.5*dt^2*(M\P0(:, i) -M\C*xd_difcentral ...
+            -M\K*x_difcentral(:, i-1)) + x_difcentral(:, i-1) ... 
+            + dt*xd_difcentral;
+
+        xd_difcentral = (2/dt)*(x_difcentral(:, i) - x_difcentral(:, i-1)) ...
+            - xd_difcentral;
+    end
+
+    for i=1:gdl
+        figure(1 + i)
+        plot(t, x_difcentral(i, :))
+    end
+    
+end
+
+% v5=zeros(2,len_t);
+% v5(1,1:p(1))=triang(p(1)).*0.1;
+% v5(2,da(1):(da(1)+p(1)-1))=triang(p(1)).*0.1;
+% 
+% v20=zeros(2,len_t);
+% v20(1,1:p(2))=triang(p(2)).*0.1;
+% v20(2,da(2):(da(2)+p(2)-1))=triang(p(2)).*0.1;
+% 
+% v60=zeros(2,len_t);
+% v60(1,1:p(3))=triang(p(3)).*0.1;
+% v60(2,da(3):(da(3)+p(3)-1))=triang(p(3)).*0.1;
+% 
+% v100=zeros(2,len_t);
+% v100(1,1:p(4))=triang(p(4)).*0.1;
+% v100(2,da(4):(da(4)+p(4)-1))=triang(p(4)).*0.1;
 % 
 
-function yd = vibforz(t, y, z, w, P0m, wL)
 
-    A = [0, 1;
-        -w^2, -2*z*w];
-    L = [0;
-        P0m*sin(wL*t)];
-    yd = A*y + L;
 
-end
+% for i=1:length(v)
+%         
+%     P0(1, 1:p(i), i) = triang(p(i))*amp;
+%     P0(2, (da(i):(da(i)+p(i)-1)), i) = triang(p(i))*amp;
+%     
+% end
+% 
+% for i=1:length(v)
+%     
+%     figure(8+i)
+%     plot(t, P0(1, i, :))
+%     
+% end
+    
+
+% figure (1) 
+% hold on
+% grid on
+% ax1=subplot(2,2,1)
+% plot(ax1,t,v5,'r');
+% 
+% ax2=subplot(2,2,2)
+% plot(ax2,t,v20,'b');
+% ax3=subplot(2,2,3)
+% plot(ax3,t,v60,'y');
+% ax4=subplot(2,2,4)
+% plot(ax4,t,v100,'g');
+
+
+% x_difcentral = zeros(4, len_t);
+% x_difcentral(:, 1) = x0;
+% 
+% xd_difcentral = xd0;
+% 
+% for i=2:len_t
+%     
+%     x_difcentral(:, i) = 0.5*dt^2*(M\P0(:, i) -M\C*xd_difcentral ...
+%         -M\K*x_difcentral(:, i-1)) + x_difcentral(:, i-1) ... 
+%         + dt*xd_difcentral;
+%     
+%     xd_difcentral = (2/dt)*(x_difcentral(:, i) - x_difcentral(:, i-1)) ...
+%         - xd_difcentral;
+%     
+% end
+% 
+% for i=1:gdl
+%     figure(i)
+%     plot(t, x_difcentral(i, :))
+% 
+% end
+% 
+% for i=1:gdl
+%     figure(4+i)
+%     plot(t, x_difcentral(i, :)-x2_ode(i, :))
+% end
+
+
 
 
 %% Función para el ode45 en coordenadas geométricas
@@ -169,46 +288,14 @@ end
 function x_forz = vibforz_geo(t, x, M, C, K, ZERO, I, L, wl, phase, amp)
 
     A = [ZERO, I;
-        -inv(M)*K, -inv(M)*C];
+        -M\K, -M\C];
     
     B = [zeros(4, 1);
-        -inv(M)*(L*[amp*sin(wl*t);
-                    amp*sin(wl*t - phase);
-                    0;
-                    0])];
+        M\(L*[amp*sin(wl*t);
+                amp*sin(wl*t - phase);
+                0;
+                0])];
     
     x_forz = A*x + B;
 
 end
-
-% function x_forz = vibforz_geom(t, x, M, C, K, ZERO, I, L, xg)
-%     
-%     if (getGlobalcounter() > 150001)
-% %         x_forz = zeros(8, 1);
-%         setGlobalcounter(getGlobalcounter()-1);
-%         disp("hola")
-%     end
-%     
-%     a = [ZERO, I;
-%         -inv(M)*K, -inv(M)*C];
-%     
-%     
-%     B=vertcat(zeros(4, 1), -inv(M)*(L*xg(:, getGlobalcounter())));
-%     
-%     x_forz = a*x + B;
-% 
-%     setGlobalcounter(getGlobalcounter()+1);
-%         
-% end
-% 
-% function setGlobalcounter(val)
-% global counter
-% counter = val;
-% 
-% end
-% 
-% function r = getGlobalcounter()
-% global counter
-% r = counter;
-% end
-
