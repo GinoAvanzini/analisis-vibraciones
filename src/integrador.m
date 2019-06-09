@@ -26,8 +26,8 @@ k4 = k2;        % N/m
 c1 = 4000;  % N*s/m
 c2 = 4000;  % N*s/m
 
-l1 = 2;     % m
-l2 = 1;     % m
+l1 = 1.4;     % m
+l2 = 2;     % m
 
 gdl = 4;
 
@@ -37,9 +37,9 @@ t = 0:dt:5;
 len_t = length(t);
 
 % Condiciones iniciales en coordenadas geométricas
-x0 = [0.01;
+x0 = [0
     0;
-    -0.02;
+    0;
     0];
 
 xd0 = [0;
@@ -83,8 +83,41 @@ Mn = diag(X'*M*X);
 Kn = diag(X'*K*X);
 
 Wn_vec = diag(Wn); % Los wn son en realidad w^2
+
 % Wnd = Wn_vec.^0.5 .*(1-zeta_n.^2).^0.5;
 
+
+
+
+%% Respuesta con el ode45 en coordenadas geométricas en vibraciones libres
+% 
+
+x0 = [0; 0; 0.05; 0];
+ZERO = zeros(gdl, gdl);
+I = eye(gdl, gdl);
+
+[t, x_ode] = ode45(@(t, x2_ode) ...
+    vibforz_geo(t, x2_ode, M, C, K, ZERO, I, L, 0, 0, 0), t, [x0; xd0]);
+
+x_ode = x_ode';
+
+for i=1:gdl
+    figure(i)
+    plot(t, x_ode(i, :))
+    hold on
+
+end
+
+clear x_ode
+clear xg
+
+close all
+
+%% Respuesta con el ode45 en coordenadas geométricas en vibraciones 
+% forzadas con carga armónica
+%
+
+clc
 
 % Descripción de la carga
 A = 0.04;
@@ -93,18 +126,12 @@ lambda = 0.35;
 v = 100*1000/3600;       % 40 km/h en m/s
 wl = 2*pi*v/lambda;     % frec de la carga, función de la vel del auto
 
-
-%% Respuesta con el ode45 en coordenadas geométricas
-% 
-
-clc
-
 phase = (((l1 + l2)/lambda) - floor((l1 + l2)/lambda))*2*pi;
 
-xg = [A*sin(wl*(t));
-    A*sin(wl*(t) - phase);
-    zeros(1, len_t);
-    zeros(1, len_t)];
+% xg = [A*sin(wl*(t));
+%     A*sin(wl*(t) - phase);
+%     zeros(1, len_t);
+%     zeros(1, len_t)];
 
 % for i=1:gdl
 %     figure(i)
@@ -113,6 +140,7 @@ xg = [A*sin(wl*(t));
 % end
 
 x0 = [0; 0; 0; 0];
+xd0 = [0; 0; 0; 0];
 
 ZERO = zeros(gdl, gdl);
 I = eye(gdl, gdl);
@@ -120,33 +148,22 @@ I = eye(gdl, gdl);
 % [t, x_ode] = ode45(@(t, x_ode) ...
 %     vibforz_geo(t, x_ode, M, C, K, ZERO, I, L, wl, phase, A), t, [x0; xd0]);
 
-[t, x2_ode] = ode45(@(t, x2_ode) ...
+[t, x_ode] = ode45(@(t, x2_ode) ...
     vibforz_geo(t, x2_ode, M, C, K, ZERO, I, L, wl, phase, A), t, [x0; xd0]);
 
-x2_ode = x2_ode';
+x_ode = x_ode';
 
 for i=1:gdl
     figure(i)
-    plot(t, x2_ode(i, :))
+    plot(t, x_ode(i, :))
     hold on
 
 end
 
-clear x2_ode
+clear x_ode
 clear xg
-clear P0
 
-% setGlobalcounter(1);
-% [t, x_ode] = ode45(@(t, x_ode) ...
-%     vibforz_geom(t, x_ode, M, C, K, ZERO, I, L, xg), t, [x0; xd0]);
-
-% x_ode = x_ode';
-% 
-% for i=1:gdl
-%     figure(i)
-%     plot(t, x_ode(i, :))
-% 
-% end
+close all
 
 %% Método de diferencia central para respuesta ante carga general
 
