@@ -20,7 +20,7 @@ J = 500;    % Kg*m^2
 
 k1 = 80000;     % N/m
 k2 = 300000;    % N/m
-k3 = 40000;     % N/m
+k3 = 60000;     % N/m
 k4 = k2;        % N/m
 
 c1 = 4000;  % N*s/m
@@ -32,7 +32,7 @@ l2 = 2;     % m
 gdl = 4;
 
 dt = 0.0001;    % f = 10kHz
-t = 0:dt:5;
+t = 0:dt:3;
 
 len_t = length(t);
 
@@ -92,7 +92,10 @@ Wn_vec = diag(Wn); % Los wn son en realidad w^2
 %% Respuesta con el ode45 en coordenadas geométricas en vibraciones libres
 % 
 
-x0 = [0; 0; 0.05; 0];
+clc
+
+x0 = [0; 0.02; 0.05; 0];
+xd0 = [0.01; -0.02; 0.05; -0.01];
 ZERO = zeros(gdl, gdl);
 I = eye(gdl, gdl);
 
@@ -123,15 +126,17 @@ clc
 A = 0.04;
 lambda = 0.35;
 
-v = 100*1000/3600;       % 40 km/h en m/s
+% Velocidades
+% v=[5 20 60 100];
+v = 60*1000/3600;       % 40 km/h en m/s
 wl = 2*pi*v/lambda;     % frec de la carga, función de la vel del auto
 
 phase = (((l1 + l2)/lambda) - floor((l1 + l2)/lambda))*2*pi;
 
-% xg = [A*sin(wl*(t));
-%     A*sin(wl*(t) - phase);
-%     zeros(1, len_t);
-%     zeros(1, len_t)];
+xg = [A*sin(wl*(t'));
+    A*sin(wl*(t') - phase);
+    zeros(1, len_t);
+    zeros(1, len_t)];
 
 % for i=1:gdl
 %     figure(i)
@@ -155,7 +160,7 @@ x_ode = x_ode';
 
 for i=1:gdl
     figure(i)
-    plot(t, x_ode(i, :))
+    plot(t, x_ode(i, :) - xg(i, :))
     hold on
 
 end
@@ -169,7 +174,7 @@ close all
 
 clc
 
-amp = 0.01;
+amp = 0.1;
 b = 0.2;
 
 % Velocidades
@@ -183,17 +188,17 @@ da = (l1 + l2)./(dt*v);
 for j=1:length(v)
     
     %% Carga
-    P0 = zeros(gdl, len_t);
+    xg = zeros(gdl, len_t);
     
-    P0(1, 2:round(p(j) + 1)) = triang(round(p(j)))*amp;
-    P0(2, (round(1 + da(j)):round((da(j) + p(j))))) = triang(round(p(j)))*amp;
+    xg(1, 2:round(p(j) + 1)) = triang(round(p(j)))*amp;
+    xg(2, (round(1 + da(j)):round((da(j) + p(j))))) = triang(round(p(j)))*amp;
 
     figure(j)
-    plot(t, P0(1, :))
+    plot(t, xg(1, :))
     hold on 
-    plot(t, P0(2, :))
+    plot(t, xg(2, :))
     
-    P0 = L*P0;  % En [N], lo anterior era solo amplitud
+    P0 = L*xg;  % En [N], lo anterior era solo amplitud
     
     %% Respuesta con diferencia central
 
@@ -216,7 +221,7 @@ for j=1:length(v)
 
     for i=1:gdl
         figure(1 + i)
-        plot(t, x_difcentral(i, :))
+        plot(t, x_difcentral(i, :) - xg(i, :))
     end
     
 end
@@ -316,3 +321,5 @@ function x_forz = vibforz_geo(t, x, M, C, K, ZERO, I, L, wl, phase, amp)
     x_forz = A*x + B;
 
 end
+
+
