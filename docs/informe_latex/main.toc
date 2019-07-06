@@ -1,0 +1,38 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {spanish}{}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Introducción}{1}{section.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Modelado y métodos numéricos}{2}{section.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {\textup {2.1}}Modelo físico}{2}{subsection.2.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {\textup {2.2}}Modelo matemático}{2}{subsection.2.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {\textup {2.3}}Métodos numéricos}{4}{subsection.2.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {\textup {\textup {2.3}.1}}Método de Diferencias Finitas}{4}{subsubsection.2.3.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {\textup {\textup {2.3}.2}}ode45}{4}{subsubsection.2.3.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}Frecuencias y modos naturales}{6}{section.3}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4}Respuesta en vibraciones libres}{7}{section.4}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5}Respuesta a vibraciones forzadas con carga armónica}{8}{section.5}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {\textup {5.1}}Caracterización de la carga}{8}{subsection.5.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {\textup {5.2}}Respuesta}{8}{subsection.5.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {\textup {\textup {5.2}.1}}Comparación de las respuestas a distintas velocidades}{10}{subsubsection.5.2.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}Respuesta a carga impulsiva}{11}{section.6}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {\textup {6.1}}Descripción de la carga}{11}{subsection.6.1}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {\textup {6.2}}Respuesta}{11}{subsection.6.2}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7}Discusión y conclusiones}{13}{section.7}% 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {8}Referencias}{14}{section.8}% 

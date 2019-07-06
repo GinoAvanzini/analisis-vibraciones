@@ -1,0 +1,18 @@
+\BOOKMARK [1][-]{section.1}{Introducción}{}% 1
+\BOOKMARK [1][-]{section.2}{Modelado y métodos numéricos}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Modelo físico}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Modelo matemático}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Métodos numéricos}{section.2}% 5
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Método de Diferencias Finitas}{subsection.2.3}% 6
+\BOOKMARK [3][-]{subsubsection.2.3.2}{ode45}{subsection.2.3}% 7
+\BOOKMARK [1][-]{section.3}{Frecuencias\040y\040modos\040naturales}{}% 8
+\BOOKMARK [1][-]{section.4}{Respuesta\040en\040vibraciones\040libres}{}% 9
+\BOOKMARK [1][-]{section.5}{Respuesta a vibraciones forzadas con carga armónica}{}% 10
+\BOOKMARK [2][-]{subsection.5.1}{Caracterización de la carga}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.2}{Respuesta}{section.5}% 12
+\BOOKMARK [3][-]{subsubsection.5.2.1}{Comparación de las respuestas a distintas velocidades}{subsection.5.2}% 13
+\BOOKMARK [1][-]{section.6}{Respuesta\040a\040carga\040impulsiva}{}% 14
+\BOOKMARK [2][-]{subsection.6.1}{Descripción de la carga}{section.6}% 15
+\BOOKMARK [2][-]{subsection.6.2}{Respuesta}{section.6}% 16
+\BOOKMARK [1][-]{section.7}{Discusión y conclusiones}{}% 17
+\BOOKMARK [1][-]{section.8}{Referencias}{}% 18
